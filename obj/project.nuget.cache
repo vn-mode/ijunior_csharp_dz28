@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "jdid1lRSmLX3Pa4riGGyVo22a5rW1tjT8YhsHUUS4p4NB8Wc/qaU4sCnkDULC3Rvrp586PWjHgg+gMw3XTJIRg==",
+  "dgSpecHash": "gKXTae3bQDeqoMb5e2rDq/Sh3FKF3Vc8I+LuC68E2laPD0aUfPzHBe1JDiJxSGFyywx9J23AJrBkoc7kf82gtw==",
   "success": true,
-  "projectFilePath": "/Users/mac/Documents/ijunior/vn_mode_csharp_dz28/vn_mode_csharp_dz28.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/Users/vitalii/Documents/GitHub/ijunior_csharp_dz28/vn_mode_csharp_dz28.csproj",
+  "expectedPackageFiles": [
+    "/Users/vitalii/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "/Users/vitalii/.nuget/packages/microsoft.netcore.app.host.osx-x64/3.1.32/microsoft.netcore.app.host.osx-x64.3.1.32.nupkg.sha512",
+    "/Users/vitalii/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512"
+  ],
   "logs": []
 }
