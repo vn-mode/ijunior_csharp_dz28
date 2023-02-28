@@ -6,7 +6,14 @@ namespace vn_mode_csharp_dz28
     {
         static void Main(string[] args)
         {
+            const string CommandAddDossier = "1";
+            const string CommandShowAllDossiers = "2";
+            const string CommandDeleteDossier = "3";
+            const string CommandSearchDossier = "4";
+            const string CommandExit = "5";
+
             bool isOpen = true;
+
             string[] dossier = new string[0];
             string[] position = new string[0];
 
@@ -23,19 +30,19 @@ namespace vn_mode_csharp_dz28
 
                 switch (Console.ReadLine())
                 {
-                    case "1":
+                    case CommandAddDossier:
                         AddDossier(ref dossier, ref position);
                         break;
-                    case "2":
+                    case CommandShowAllDossiers:
                         ShowDossier(dossier, position);
                         break;
-                    case "3":
+                    case CommandDeleteDossier:
                         DeleteDossier(ref dossier, ref position);
                         break;
-                    case "4":
+                    case CommandSearchDossier:
                         FindDossier(dossier, position);
                         break;
-                    case "5":
+                    case CommandExit:
                         isOpen = false;
                         break;
                 }
@@ -43,6 +50,7 @@ namespace vn_mode_csharp_dz28
                 Console.ReadKey();
                 Console.Clear();
             }
+
             Console.WriteLine("Вы вышли из программы.");
         }
 
@@ -85,7 +93,7 @@ namespace vn_mode_csharp_dz28
             Console.WriteLine("На какой должности сотрудник работает?");
             ExpansionArray(ref position);
             position[position.Length - 1] = Console.ReadLine();
-            showMessage("Досье успешно добавлено.");
+            ShowMessage("Досье успешно добавлено.");
         }
 
         static void ShowDossier(string[] dossier, string[] position)
@@ -100,9 +108,10 @@ namespace vn_mode_csharp_dz28
                     Console.WriteLine((i + 1) + ". " + dossier[i] + " - " + position[i]);
                 }
             }
+
             if (dossier.Length == 0)
             {
-                showMessage("Отсутствуют досье", ConsoleColor.DarkRed);
+                ShowMessage("Отсутствуют досье", ConsoleColor.DarkRed);
             }
         }
 
@@ -112,7 +121,7 @@ namespace vn_mode_csharp_dz28
             int indexForDeleating = Convert.ToInt32(Console.ReadLine());
             CompressionArray(ref dossier, indexForDeleating);
             CompressionArray(ref position, indexForDeleating);
-            showMessage("Досье успешно удалено.");
+            ShowMessage("Досье успешно удалено.");
         }
 
         static void FindDossier(string[] dossier, string[] position)
@@ -131,7 +140,8 @@ namespace vn_mode_csharp_dz28
                 }
             }
         }
-        static void showMessage(string message, ConsoleColor color = ConsoleColor.DarkGreen)
+
+        static void ShowMessage(string message, ConsoleColor color = ConsoleColor.DarkGreen)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(message);
