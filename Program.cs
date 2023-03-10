@@ -54,7 +54,7 @@ namespace vn_mode_csharp_dz28
             Console.WriteLine("Вы вышли из программы.");
         }
 
-        static string[] ExpansionArray(ref string[] array)
+        static void ExpansionArray(ref string[] array)
         {
             string[] tempArray = new string[array.Length + 1];
 
@@ -64,10 +64,9 @@ namespace vn_mode_csharp_dz28
             }
 
             array = tempArray;
-            return array;
         }
 
-        static string[] CompressionArray(ref string[] array, int indexForCompressed)
+        static void CompressionArray(ref string[] array, int indexForCompressed)
         {
             string[] tempArray = new string[array.Length - 1];
 
@@ -82,7 +81,6 @@ namespace vn_mode_csharp_dz28
             }
 
             array = tempArray;
-            return array;
         }
 
         static void AddDossier(ref string[] dossier, ref string[] position)
@@ -119,9 +117,17 @@ namespace vn_mode_csharp_dz28
         {
             Console.WriteLine("Досье под каким номером нужно удалить?");
             int indexForDeleating = Convert.ToInt32(Console.ReadLine());
-            CompressionArray(ref dossier, indexForDeleating);
-            CompressionArray(ref position, indexForDeleating);
-            ShowMessage("Досье успешно удалено.");
+
+            if (dossier.Length > 0 && position.Length > 0)
+            {
+                CompressionArray(ref dossier, indexForDeleating);
+                CompressionArray(ref position, indexForDeleating);
+                ShowMessage("Досье успешно удалено.");
+            }
+            else
+            {
+                ShowMessage("Отсутствуют досье", ConsoleColor.DarkRed);
+            }
         }
 
         static void FindDossier(string[] dossier, string[] position)
@@ -131,8 +137,9 @@ namespace vn_mode_csharp_dz28
 
             for (int i = 0; i < dossier.Length; i++)
             {
+                char symbol = ' ';
                 string fullName = dossier[i];
-                string[] surnameFind = fullName.Split(' ');
+                string[] surnameFind = fullName.Split(symbol);
 
                 if (userInput.ToLower() == surnameFind[0].ToLower())
                 {
