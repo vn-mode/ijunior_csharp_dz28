@@ -11,39 +11,48 @@ namespace vn_mode_csharp_dz28
             const string CommandDeleteDossier = "3";
             const string CommandSearchDossier = "4";
             const string CommandExit = "5";
+            const string CommandError = "Такой команды не существует, попробуйте ещё раз.";
 
             bool isOpen = true;
 
-            string[] dossier = new string[0];
-            string[] position = new string[0];
+            string[] dossiers = new string[0];
+            string[] positions = new string[0];
 
             while (isOpen)
             {
                 Console.WriteLine("Доступные команды:\n");
-                Console.WriteLine("1 - Добавить досье");
-                Console.WriteLine("2 - Показать все досье");
-                Console.WriteLine("3 - Удалить выбранное досье");
-                Console.WriteLine("4 - Поиск досье по фамилии");
-                Console.WriteLine("5 - Выход из программы");
+                Console.WriteLine($"{CommandAddDossier} - Добавить досье");
+                Console.WriteLine($"{CommandShowAllDossiers} - Показать все досье");
+                Console.WriteLine($"{CommandDeleteDossier} - Удалить выбранное досье");
+                Console.WriteLine($"{CommandSearchDossier} - Поиск досье по фамилии");
+                Console.WriteLine($"{CommandExit} - Выход из программы");
 
                 Console.Write("Введите номер команды: ");
 
                 switch (Console.ReadLine())
                 {
                     case CommandAddDossier:
-                        AddDossier(ref dossier, ref position);
+                        AddDossier(ref dossiers, ref positions);
                         break;
+
                     case CommandShowAllDossiers:
-                        ShowDossier(dossier, position);
+                        ShowDossier(dossiers, positions);
                         break;
+
                     case CommandDeleteDossier:
-                        DeleteDossier(ref dossier, ref position);
+                        DeleteDossier(ref dossiers, ref positions);
                         break;
+
                     case CommandSearchDossier:
-                        FindDossier(dossier, position);
+                        FindDossier(dossiers, positions);
                         break;
+
                     case CommandExit:
                         isOpen = false;
+                        break;
+
+                    default:
+                        ShowMessage(CommandError, ConsoleColor.DarkRed);
                         break;
                 }
 
@@ -103,7 +112,8 @@ namespace vn_mode_csharp_dz28
             {
                 if (dossier[i] != "" && position[i] != "")
                 {
-                    Console.WriteLine((i + 1) + ". " + dossier[i] + " - " + position[i]);
+                    int indexPosition = i + 1;
+                    Console.WriteLine(indexPosition + ". " + dossier[i] + " - " + position[i]);
                 }
             }
 
@@ -116,17 +126,24 @@ namespace vn_mode_csharp_dz28
         static void DeleteDossier(ref string[] dossier, ref string[] position)
         {
             Console.WriteLine("Досье под каким номером нужно удалить?");
-            int indexForDeleating = Convert.ToInt32(Console.ReadLine());
 
-            if (dossier.Length > 0 && position.Length > 0)
+            try
             {
-                CompressionArray(ref dossier, indexForDeleating);
-                CompressionArray(ref position, indexForDeleating);
-                ShowMessage("Досье успешно удалено.");
+                int indexForDeleating = Convert.ToInt32(Console.ReadLine());
+                if (dossier.Length > 0 && position.Length > 0)
+                {
+                    CompressionArray(ref dossier, indexForDeleating);
+                    CompressionArray(ref position, indexForDeleating);
+                    ShowMessage("Досье успешно удалено.");
+                }
+                else
+                {
+                    ShowMessage("Досье под таким номером не существует.", ConsoleColor.DarkRed);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ShowMessage("Отсутствуют досье", ConsoleColor.DarkRed);
+                ShowMessage("Досье под таким номером не существует.", ConsoleColor.DarkRed);
             }
         }
 
@@ -137,14 +154,21 @@ namespace vn_mode_csharp_dz28
 
             for (int i = 0; i < dossier.Length; i++)
             {
-                char symbol = ' ';
+                char separator = ' ';
                 string fullName = dossier[i];
-                string[] surnameFind = fullName.Split(symbol);
+                string[] surnameFind = fullName.Split(separator);
 
                 if (userInput.ToLower() == surnameFind[0].ToLower())
                 {
-                    Console.WriteLine((i + 1) + ". " + dossier[i] + " - " + position[i]);
+                    int indexPosition = i + 1;
+                    Console.WriteLine(indexPosition + ". " + dossier[i] + " - " + position[i]);
+                    ShowMessage("Досье не найдено.", ConsoleColor.DarkRed);
                 }
+            }
+
+            if (dossier.Length <= 0)
+            {
+                ShowMessage("Досье не найдено", ConsoleColor.DarkRed);
             }
         }
 
