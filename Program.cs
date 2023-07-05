@@ -4,20 +4,19 @@ namespace vn_mode_csharp_dz28
 {
     class Program
     {
+        const string CommandAddDossier = "1";
+        const string CommandShowAllDossiers = "2";
+        const string CommandDeleteDossier = "3";
+        const string CommandSearchDossier = "4";
+        const string CommandExit = "5";
+        const string CommandError = "Такой команды не существует, попробуйте ещё раз.";
+
+        static string[] fullNames = new string[0];
+        static string[] positions = new string[0];
+        static bool isOpen = true;
+
         static void Main(string[] args)
         {
-            const string CommandAddDossier = "1";
-            const string CommandShowAllDossiers = "2";
-            const string CommandDeleteDossier = "3";
-            const string CommandSearchDossier = "4";
-            const string CommandExit = "5";
-            const string CommandError = "Такой команды не существует, попробуйте ещё раз.";
-
-            bool isOpen = true;
-
-            string[] dossiers = new string[0];
-            string[] positions = new string[0];
-
             while (isOpen)
             {
                 Console.WriteLine("Доступные команды:\n");
@@ -28,23 +27,24 @@ namespace vn_mode_csharp_dz28
                 Console.WriteLine($"{CommandExit} - Выход из программы");
 
                 Console.Write("Введите номер команды: ");
+                string command = Console.ReadLine();
 
-                switch (Console.ReadLine())
+                switch (command)
                 {
                     case CommandAddDossier:
-                        AddDossier(ref dossiers, ref positions);
+                        AddDossier();
                         break;
 
                     case CommandShowAllDossiers:
-                        ShowDossier(dossiers, positions);
+                        ShowAllDossiers();
                         break;
 
                     case CommandDeleteDossier:
-                        DeleteDossier(ref dossiers, ref positions);
+                        DeleteDossier();
                         break;
 
                     case CommandSearchDossier:
-                        FindDossier(dossiers, positions);
+                        SearchDossier();
                         break;
 
                     case CommandExit:
@@ -92,48 +92,50 @@ namespace vn_mode_csharp_dz28
             array = tempArray;
         }
 
-        static void AddDossier(ref string[] dossier, ref string[] position)
+        static void AddDossier()
         {
             Console.WriteLine("Заполните ФИО сотрудника:");
-            ExpansionArray(ref dossier);
-            dossier[dossier.Length - 1] = Console.ReadLine();
+            ExpansionArray(ref fullNames);
+            fullNames[fullNames.Length - 1] = Console.ReadLine();
+
             Console.WriteLine("На какой должности сотрудник работает?");
-            ExpansionArray(ref position);
-            position[position.Length - 1] = Console.ReadLine();
+            ExpansionArray(ref positions);
+            positions[positions.Length - 1] = Console.ReadLine();
+
             ShowMessage("Досье успешно добавлено.");
         }
 
-        static void ShowDossier(string[] dossier, string[] position)
+        static void ShowAllDossiers()
         {
             Console.WriteLine();
             Console.WriteLine("Список всех досье:");
 
-            for (int i = 0; i < dossier.Length; i++)
+            for (int i = 0; i < fullNames.Length; i++)
             {
-                if (dossier[i] != "" && position[i] != "")
+                if (!string.IsNullOrEmpty(fullNames[i]) && !string.IsNullOrEmpty(positions[i]))
                 {
                     int indexPosition = i + 1;
-                    Console.WriteLine(indexPosition + ". " + dossier[i] + " - " + position[i]);
+                    Console.WriteLine($"{indexPosition}. {fullNames[i]} - {positions[i]}");
                 }
             }
 
-            if (dossier.Length == 0)
+            if (fullNames.Length == 0)
             {
                 ShowMessage("Отсутствуют досье", ConsoleColor.DarkRed);
             }
         }
 
-        static void DeleteDossier(ref string[] dossier, ref string[] position)
+        static void DeleteDossier()
         {
             Console.WriteLine("Досье под каким номером нужно удалить?");
 
             try
             {
-                int indexForDeleating = Convert.ToInt32(Console.ReadLine());
-                if (dossier.Length > 0 && position.Length > 0)
+                int indexForDeleting = Convert.ToInt32(Console.ReadLine());
+                if (indexForDeleting >= 1 && indexForDeleting <= fullNames.Length)
                 {
-                    CompressionArray(ref dossier, indexForDeleating);
-                    CompressionArray(ref position, indexForDeleating);
+                    CompressionArray(ref fullNames, indexForDeleting);
+                    CompressionArray(ref positions, indexForDeleting);
                     ShowMessage("Досье успешно удалено.");
                 }
                 else
@@ -147,29 +149,25 @@ namespace vn_mode_csharp_dz28
             }
         }
 
-        static void FindDossier(string[] dossier, string[] position)
+        static void SearchDossier()
         {
             Console.WriteLine("Введите фамилию для поиска:");
             string userInput = Console.ReadLine();
 
-            for (int i = 0; i < dossier.Length; i++)
+            for (int i = 0; i < fullNames.Length; i++)
             {
-                char separator = ' ';
-                string fullName = dossier[i];
-                string[] surnameFind = fullName.Split(separator);
+                string fullName = fullNames[i];
+                string[] nameParts = fullName.Split(' ');
 
-                if (userInput.ToLower() == surnameFind[0].ToLower())
+                if (nameParts.Length > 0 && string.Equals(userInput, nameParts[0], StringComparison.OrdinalIgnoreCase))
                 {
                     int indexPosition = i + 1;
-                    Console.WriteLine(indexPosition + ". " + dossier[i] + " - " + position[i]);
-                    ShowMessage("Досье не найдено.", ConsoleColor.DarkRed);
+                    Console.WriteLine($"{indexPosition}. {fullNames[i]} - {positions[i]}");
+                    return;
                 }
             }
 
-            if (dossier.Length <= 0)
-            {
-                ShowMessage("Досье не найдено", ConsoleColor.DarkRed);
-            }
+            ShowMessage("Досье не найдено", ConsoleColor.DarkRed);
         }
 
         static void ShowMessage(string message, ConsoleColor color = ConsoleColor.DarkGreen)
