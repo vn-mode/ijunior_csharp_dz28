@@ -1,23 +1,21 @@
 ﻿<Properties StartupConfiguration="{97130D3A-A646-4F40-9BA8-B4149B736AE0}|Default">
   <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="109" Column="53" />
+      <File FileName="Program.cs" Line="72" Column="41" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="vn_mode_csharp_dz28" expanded="True">
-            <Node name="vn_mode_csharp_dz28" expanded="True" />
-          </Node>
+          <Node name="vn_mode_csharp_dz28" selected="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.vn__mode__csharp__dz28 PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.vn__mode__csharp__dz28 PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>
