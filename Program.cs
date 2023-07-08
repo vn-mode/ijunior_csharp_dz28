@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace vn_mode_csharp_dz28
 {
     class Program
     {
-        const string CommandAddDossier = "1";
-        const string CommandShowAllDossiers = "2";
-        const string CommandDeleteDossier = "3";
-        const string CommandSearchDossier = "4";
-        const string CommandExit = "5";
-
         static void Main(string[] args)
         {
-            string addDossierMessage = CommandAddDossier + " - Добавить досье";
-            string showAllDossiersMessage = CommandShowAllDossiers + " - Показать все досье";
-            string deleteDossierMessage = CommandDeleteDossier + " - Удалить выбранное досье";
-            string searchDossierMessage = CommandSearchDossier + " - Поиск досье по фамилии";
-            string exitProgramMessage = CommandExit + " - Выход из программы";
+            const string CommandAddDossier = "1";
+            const string CommandShowAllDossiers = "2";
+            const string CommandDeleteDossier = "3";
+            const string CommandSearchDossier = "4";
+            const string CommandExit = "5";
 
-            string availableCommandsMessage = "Доступные команды:\n" + addDossierMessage + "\n" + showAllDossiersMessage + "\n" + deleteDossierMessage + "\n" + searchDossierMessage + "\n" + exitProgramMessage;
-            string enterCommandMessage = "Введите номер команды: ";
+            const string addDossierMessage = CommandAddDossier + " - Добавить досье";
+            const string showAllDossiersMessage = CommandShowAllDossiers + " - Показать все досье";
+            const string deleteDossierMessage = CommandDeleteDossier + " - Удалить выбранное досье";
+            const string searchDossierMessage = CommandSearchDossier + " - Поиск досье по фамилии";
+            const string exitProgramMessage = CommandExit + " - Выход из программы";
 
-            DossierManager dossierManager = new DossierManager();
+            const string availableCommandsMessage = "Доступные команды:\n" + addDossierMessage + "\n" + showAllDossiersMessage + "\n" + deleteDossierMessage + "\n" + searchDossierMessage + "\n" + exitProgramMessage;
+            const string enterCommandMessage = "Введите номер команды: ";
+
+            Database database = new Database();
 
             bool isProgramOpen = true;
 
@@ -36,19 +35,19 @@ namespace vn_mode_csharp_dz28
                 switch (command)
                 {
                     case CommandAddDossier:
-                        dossierManager.AddDossier();
+                        database.AddDossier();
                         break;
 
                     case CommandShowAllDossiers:
-                        dossierManager.ShowAllDossiers();
+                        database.ShowAllDossiers();
                         break;
 
                     case CommandDeleteDossier:
-                        dossierManager.DeleteDossier();
+                        database.DeleteDossier();
                         break;
 
                     case CommandSearchDossier:
-                        dossierManager.SearchDossier();
+                        database.SearchDossier();
                         break;
 
                     case CommandExit:
@@ -56,7 +55,7 @@ namespace vn_mode_csharp_dz28
                         break;
 
                     default:
-                        dossierManager.ShowMessage(DossierManager.CommandErrorMessage, ConsoleColor.DarkRed);
+                        database.ShowMessage(Database.CommandErrorMessage, ConsoleColor.DarkRed);
                         break;
                 }
 
@@ -64,14 +63,14 @@ namespace vn_mode_csharp_dz28
                 Console.Clear();
             }
 
-            Console.WriteLine(DossierManager.ExitProgramFinalMessage);
+            Console.WriteLine(Database.ExitProgramFinalMessage);
         }
     }
 
-    class DossierManager
+    class Database
     {
-        private List<string> _fullNames = new List<string>();
-        private List<string> _positions = new List<string>();
+        private string[] _fullNames = new string[0];
+        private string[] _positions = new string[0];
 
         public const string DossierAddedMessage = "Досье успешно добавлено.";
         public const string DossierDeletedMessage = "Досье успешно удалено.";
@@ -85,10 +84,20 @@ namespace vn_mode_csharp_dz28
         public const string CommandErrorMessage = "Такой команды не существует, попробуйте ещё раз.";
         public const string ExitProgramFinalMessage = "Вы вышли из программы.";
 
-        private void AddToArrays(string fullName, string position)
+        private void ResizeArray(ref string[] array, string newValue = null)
         {
-            _fullNames.Add(fullName);
-            _positions.Add(position);
+            string[] tempArray = newValue != null ? new string[array.Length + 1] : new string[array.Length - 1];
+            Array.Copy(array, tempArray, array.Length);
+            if (newValue != null) tempArray[^1] = newValue;
+            array = tempArray;
+        }
+
+        private void RemoveAt(ref string[] array, int index)
+        {
+            string[] newArray = new string[array.Length - 1];
+            Array.Copy(array, 0, newArray, 0, index);
+            Array.Copy(array, index + 1, newArray, index, array.Length - index - 1);
+            array = newArray;
         }
 
         public void AddDossier()
@@ -99,22 +108,21 @@ namespace vn_mode_csharp_dz28
             Console.WriteLine(EnterPositionMessage);
             string position = Console.ReadLine();
 
-            for (int i = 0; i < _fullNames.Count; i++)
+            if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(position))
             {
-                if (_fullNames[i] == fullName && _positions[i] == position)
-                {
-                    ShowMessage("Досье с таким именем и позицией уже существует.", ConsoleColor.DarkRed);
-                    return;
-                }
+                ShowMessage("ФИО и должность не могут быть пустыми.", ConsoleColor.DarkRed);
+                return;
             }
 
-            AddToArrays(fullName, position);
+            ResizeArray(ref _fullNames, fullName);
+            ResizeArray(ref _positions, position);
+
             ShowMessage(DossierAddedMessage);
         }
 
         public void ShowAllDossiers()
         {
-            if (_fullNames.Count == 0)
+            if (_fullNames.Length == 0)
             {
                 ShowMessage(NoDossiersMessage, ConsoleColor.DarkRed);
                 return;
@@ -122,13 +130,8 @@ namespace vn_mode_csharp_dz28
 
             Console.WriteLine("\nСписок всех досье:");
 
-            for (int i = 0; i < _fullNames.Count; i++)
+            for (int i = 0; i < _fullNames.Length; i++)
             {
-                if (string.IsNullOrEmpty(_fullNames[i]) || string.IsNullOrEmpty(_positions[i]))
-                {
-                    continue;
-                }
-
                 int indexPosition = i + 1;
                 Console.WriteLine($"{indexPosition}. {_fullNames[i]} - {_positions[i]}");
             }
@@ -140,10 +143,10 @@ namespace vn_mode_csharp_dz28
 
             int indexForDeleting = Convert.ToInt32(Console.ReadLine()) - 1;
 
-            if (indexForDeleting >= 0 && indexForDeleting < _fullNames.Count)
+            if (indexForDeleting >= 0 && indexForDeleting < _fullNames.Length)
             {
-                _fullNames.RemoveAt(indexForDeleting);
-                _positions.RemoveAt(indexForDeleting);
+                RemoveAt(ref _fullNames, indexForDeleting);
+                RemoveAt(ref _positions, indexForDeleting);
                 ShowMessage(DossierDeletedMessage);
             }
             else
@@ -160,7 +163,7 @@ namespace vn_mode_csharp_dz28
 
             bool isFound = false;
 
-            for (int i = 0; i < _fullNames.Count; i++)
+            for (int i = 0; i < _fullNames.Length; i++)
             {
                 string fullName = _fullNames[i];
                 string[] fullNameParts = fullName.Split(nameDelimiter);
